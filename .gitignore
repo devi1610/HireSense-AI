@@ -1,16 +1,23 @@
-#Python
-__pycache__/
-*.pyc
-env/
-venv/
-.env
-
 #Node
 node_modules/
+frontend/node_modules/
 dist/
 build/
 
-#DB / logs
-*.sqlite3
+
+
+#Python
+__pycache__/
+*.pyc
+venv/
+env/
+.env
+
+
+# Django
+db.sqlite3
+media/
+
+#Logs
 *.log
 
