@@ -26,28 +26,42 @@ function Register() {
       setMessage(res.data.message);
 
       setTimeout(() => {
-        navigate("/");
+        navigate("/login");
       }, 1000);
     } catch (err) {
       console.log(err);
-      setMessage("Register failed");
+      setMessage("Register failed ❌");
     }
   };
 
   return (
     <div style={styles.container}>
       <form onSubmit={handleRegister} style={styles.card}>
-        <h2>Register</h2>
+        <h1 style={{ textAlign: "center" }}>
+          Create Account 🚀
+        </h1>
+
+        <p
+          style={{
+            textAlign: "center",
+            color: "#64748b",
+            marginBottom: "25px",
+          }}
+        >
+          Join HireSense AI and start analyzing resumes
+        </p>
 
         <input
-          placeholder="Name"
+          placeholder="Full Name"
+          value={name}
           onChange={(e) => setName(e.target.value)}
           style={styles.input}
         />
 
         <input
-          placeholder="Email"
+          placeholder="Email Address"
           type="email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
         />
@@ -55,27 +69,27 @@ function Register() {
         <input
           placeholder="Password"
           type="password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={styles.input}
         />
 
         <button type="submit" style={styles.button}>
           Register
-          
         </button>
-         <p
-          style={{
-            textAlign: "center",
-            marginTop: "10px",
-            color: "blue",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/")}
+
+        <p
+          style={styles.loginLink}
+          onClick={() => navigate("/login")}
         >
           Already have an account? Login
         </p>
 
-        <p>{message}</p>
+        {message && (
+          <p style={styles.message}>
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );
@@ -83,32 +97,60 @@ function Register() {
 
 const styles = {
   container: {
-    height: "100vh",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f6fa",
-  },
-  card: {
-    width: "300px",
+    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
     padding: "20px",
-    backgroundColor: "white",
-    borderRadius: "10px",
+    fontFamily: "Inter, Arial, sans-serif",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: "420px",
+    background: "#ffffff",
+    padding: "35px",
+    borderRadius: "20px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
   },
+
   input: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "10px",
+    border: "1px solid #dbeafe",
+    boxSizing: "border-box",
+    fontSize: "14px",
   },
+
   button: {
-    padding: "10px",
-    backgroundColor: "black",
+    width: "100%",
+    padding: "12px",
+    background: "#6366f1",
     color: "white",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "10px",
+    fontWeight: "600",
+    cursor: "pointer",
+  },
+
+  loginLink: {
+    textAlign: "center",
+    marginTop: "15px",
+    color: "#6366f1",
+    cursor: "pointer",
+    fontWeight: "500",
+  },
+
+  message: {
+    textAlign: "center",
+    marginTop: "12px",
+    color: "#16a34a",
+    fontWeight: "500",
   },
 };
 

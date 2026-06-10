@@ -1,27 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import ForgotPassword from "./pages/ForgotPassword";
+import UploadResume from "./pages/UploadResume";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* Login Page */}
-        <Route path="/" element={<Login />} />
-
-        {/* Register Page */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
-
-        {/* Forgot Password */}
-        <Route path="/forgot" element={<ForgotPassword />} />
-
+        <Route path="/upload" element={<UploadResume />} />
+        
       </Routes>
     </BrowserRouter>
   );

@@ -1,3 +1,8 @@
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.contrib.auth.hashers import make_password
+from datetime import datetime, timedelta
+
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -6,6 +11,8 @@ from .models import UserProfile, Resume
 from .serializers import UserSerializer
 import PyPDF2
 
+
+reset_tokens = {}
 
 # ---------------- REGISTER ----------------
 @api_view(['POST'])
@@ -42,6 +49,7 @@ def login_user(request):
 
     except UserProfile.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
+
 
 
 # ---------------- RESUME UPLOAD ----------------
@@ -122,7 +130,7 @@ def analyze_resume(request, id):
 
         text = ""
 
-        # Extract PDF text
+        # ---------------- PDF TEXT EXTRACTION ----------------
         with open(file_path, "rb") as file:
             reader = PyPDF2.PdfReader(file)
 
@@ -133,7 +141,7 @@ def analyze_resume(request, id):
 
         text = text.lower()
 
-        # Skills database
+        # ---------------- SKILLS DATABASE ----------------
         skills_db = [
             "python", "django", "flask",
             "react", "javascript", "html", "css",
@@ -142,45 +150,83 @@ def analyze_resume(request, id):
             "java", "c++", "aws"
         ]
 
-        skills = []
+        # ---------------- DETECT SKILLS ----------------
+        skills = [skill for skill in skills_db if skill in text]
+        user_skills = set(skills)
 
-        for skill in skills_db:
-            if skill in text:
-                skills.append(skill)
-
-        # Score calculation
-        score = min(100, len(skills) * 12)
-
-        # Role mapping
-        role_map = {
-            "Backend Developer": ["python", "django", "flask", "sql"],
-            "Frontend Developer": ["react", "javascript", "html", "css"],
-            "Data Analyst": ["sql", "excel", "python", "pandas"],
-            "ML Engineer": ["python", "numpy", "pandas", "machine learning"],
-            "Full Stack Developer": ["python", "django", "react", "javascript"]
+        # ---------------- ROLE REQUIREMENTS ----------------
+        role_requirements = {
+            "Backend Developer": {"python", "django", "sql"},
+            "Frontend Developer": {"react", "javascript", "html", "css"},
+            "Data Analyst": {"sql", "excel", "python", "pandas"},
+            "ML Engineer": {"python", "numpy", "pandas", "machine learning"},
+            "Full Stack Developer": {"python", "django", "react", "javascript"}
         }
 
+        # ---------------- JOB SUGGESTIONS (IMPROVED) ----------------
         job_suggestions = []
+        required_skills = set()
 
-        for role, keywords in role_map.items():
-            if any(skill in keywords for skill in skills):
+        for role, req_skills in role_requirements.items():
+            match_count = len(user_skills & req_skills)
+
+            if match_count >= 2:
                 job_suggestions.append(role)
 
-        # Recommended jobs
-        recommended_jobs = []
+            required_skills.update(req_skills)
 
-        for role in job_suggestions:
-            recommended_jobs.append({
+        # ---------------- MISSING SKILLS (FIXED) ----------------
+        missing_skills = list(required_skills - user_skills)
+
+        # ---------------- ATS SCORE (WEIGHTED + SAFE NORMALIZATION) ----------------
+        skill_weights = {
+            "python": 15,
+            "django": 12,
+            "flask": 10,
+            "react": 12,
+            "javascript": 10,
+            "sql": 10,
+            "machine learning": 15,
+            "pandas": 8,
+            "numpy": 8,
+            "html": 5,
+            "css": 5,
+            "aws": 12,
+            "excel": 5,
+        }
+
+        score = 0
+        for skill in user_skills:
+            score += skill_weights.get(skill, 5)
+
+        score = min(100, score)
+
+        # ---------------- JOB LINKS ----------------
+        def generate_job_links(role):
+            query = role.replace(" ", "%20")
+            return {
+                "linkedin": f"https://www.linkedin.com/jobs/search/?keywords={query}",
+                "naukri": f"https://www.naukri.com/jobs?q={query}",
+                "unstop": f"https://unstop.com/jobs?search={query}"
+            }
+
+        # ---------------- RECOMMENDED JOBS ----------------
+        recommended_jobs = [
+            {
                 "role": role,
                 "company": "Live Job Search",
                 "location": "India",
                 "links": generate_job_links(role)
-            })
+            }
+            for role in job_suggestions
+        ]
 
+        # ---------------- RESPONSE ----------------
         return Response({
             "name": resume.name,
             "email": resume.email,
             "skills_detected": skills,
+            "missing_skills": missing_skills,
             "score": score,
             "job_suggestions": job_suggestions,
             "recommended_jobs": recommended_jobs

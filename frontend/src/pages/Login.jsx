@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,32 +18,30 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post(`http://127.0.0.1:8000/api/users/login/`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/token/",
+        {
+          username: email,
+          password: password,
+        }
+      );
 
-      // store only necessary user info
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
+
       localStorage.setItem(
         "user",
         JSON.stringify({
-          id: res.data.user.id,
-          name: res.data.user.name,
-          email: res.data.user.email,
+          name: email.split("@")[0],
+          email: email,
         })
       );
 
       alert("Login successful 🚀");
       navigate("/dashboard");
-
     } catch (err) {
-      const errorMsg =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Login failed. Try again.";
-
-      alert(errorMsg);
-
+      console.log(err);
+      alert("Login failed ❌ Check credentials");
     } finally {
       setLoading(false);
     }
@@ -58,7 +54,20 @@ function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={{ marginBottom: "20px" }}>Login</h2>
+        <h1 style={{ textAlign: "center" }}>
+          Welcome Back 👋
+        </h1>
+
+        <p
+          style={{
+            textAlign: "center",
+            color: "#64748b",
+            marginBottom: "25px",
+          }}
+        >
+          Login to continue using HireSense AI
+        </p>
+
 
         <input
           style={styles.input}
@@ -82,69 +91,71 @@ function Login() {
         <button
           style={{
             ...styles.button,
-            opacity: loading ? 0.6 : 1,
-            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.7 : 1,
           }}
           onClick={handleLogin}
-          disabled={loading || !email || !password}
+          disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        <p style={styles.link} onClick={() => navigate("/forgot")}>
-          Forgot Password?
-        </p>
-
-        <p style={styles.link} onClick={() => navigate("/register")}>
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "15px",
+            color: "#6366f1",
+            cursor: "pointer",
+            fontWeight: "500",
+          }}
+          onClick={() => navigate("/register")}
+        >
           Don't have an account? Register
         </p>
+        
       </div>
     </div>
   );
 }
 
-// ---------------- STYLES ----------------
 const styles = {
   container: {
-    height: "100vh",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f4f6f8",
-    fontFamily: "Arial",
+    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
+    padding: "20px",
+    fontFamily: "Inter, Arial",
   },
 
   card: {
-    width: "320px",
-    padding: "30px",
-    backgroundColor: "white",
-    borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-    textAlign: "center",
+    width: "100%",
+    maxWidth: "420px",
+    background: "#fff",
+    padding: "35px",
+    borderRadius: "20px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
   },
 
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     marginBottom: "15px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
+    borderRadius: "10px",
+    border: "1px solid #dbeafe",
+    fontSize: "14px",
+    boxSizing: "border-box",
   },
 
   button: {
     width: "100%",
-    padding: "10px",
-    backgroundColor: "black",
+    padding: "12px",
+    background: "#6366f1",
     color: "white",
     border: "none",
-    borderRadius: "5px",
-  },
-
-  link: {
-    color: "blue",
+    borderRadius: "10px",
+    fontWeight: "600",
     cursor: "pointer",
-    marginTop: "10px",
-    textDecoration: "underline",
   },
 };
 

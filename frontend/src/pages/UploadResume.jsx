@@ -1,14 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UploadResume() {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const token = localStorage.getItem("access");
 
   const handleUpload = async (e) => {
     e.preventDefault();
+
+    if (!name || !email || !file) {
+      alert("Please fill all fields");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", name);
@@ -16,91 +26,128 @@ function UploadResume() {
     formData.append("file", file);
 
     try {
-      const res = await axios.post(
+      setLoading(true);
+
+      await axios.post(
         "http://127.0.0.1:8000/api/users/upload/",
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      setMessage("Resume uploaded successfully 🚀");
+      alert("Resume uploaded successfully 🚀");
+      navigate("/dashboard");
+
     } catch (err) {
       console.log(err);
-      setMessage("Upload failed");
+      alert("Upload failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleUpload} style={styles.card}>
-        <h2>Upload Resume 📄</h2>
+    <div style={styles.page}>
+      <div style={styles.card}>
 
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={styles.input}
-        />
+        <h1 style={styles.title}>📤 Upload Resume</h1>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
+        <p style={styles.subtitle}>
+          Upload your resume and get AI-powered analysis instantly.
+        </p>
 
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-          style={styles.input}
-        />
+        <form onSubmit={handleUpload}>
 
-        <button type="submit" style={styles.button}>
-          Upload
-        </button>
+          <input
+            type="text"
+            placeholder="Full Name"
+            style={styles.input}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        {message && <p>{message}</p>}
-      </form>
+          <input
+            type="email"
+            placeholder="Email Address"
+            style={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            type="file"
+            style={styles.input}
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+
+          <button
+            type="submit"
+            style={styles.button}
+            disabled={loading}
+          >
+            {loading ? "Uploading..." : "Upload Resume"}
+          </button>
+
+        </form>
+
+      </div>
     </div>
   );
 }
 
+export default UploadResume;
+
 const styles = {
-  container: {
-    height: "100vh",
+  page: {
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f6fa",
+    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
+    padding: "20px",
   },
+
   card: {
-    width: "350px",
-    padding: "30px",
-    backgroundColor: "white",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
+    width: "100%",
+    maxWidth: "500px",
+    background: "#fff",
+    padding: "35px",
+    borderRadius: "20px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
   },
+
+  title: {
+    textAlign: "center",
+    marginBottom: "10px",
+  },
+
+  subtitle: {
+    textAlign: "center",
+    color: "#64748b",
+    marginBottom: "25px",
+  },
+
   input: {
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "10px",
+    border: "1px solid #dbeafe",
+    fontSize: "14px",
+    boxSizing: "border-box",
   },
+
   button: {
-    padding: "10px",
-    backgroundColor: "#111",
-    color: "white",
+    width: "100%",
+    padding: "12px",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "10px",
+    background: "#6366f1",
+    color: "white",
+    fontWeight: "600",
     cursor: "pointer",
   },
 };
-
-export default UploadResume;
