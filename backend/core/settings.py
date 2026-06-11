@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-b#=l5yuc=jxl#mfj!le=c*@tdf1f@d76k+($3m5k)&=h3!(+ra
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "hiresense-ai-75v4.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
