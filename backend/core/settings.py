@@ -27,8 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "hiresense-ai-75v4.onrender.com",
+    ".onrender.com",
     "localhost",
-    "127.0.0.1",
+    "127.0.0.1"
 ]
 
 
