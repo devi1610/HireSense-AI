@@ -10,7 +10,7 @@ function ResetPassword() {
   const reset = async () => {
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/users/reset-password/",
+        "https://hiresense-ai-75v4.onrender.com/api/users/reset-password/",
         {
           token,
           password,

@@ -26,7 +26,7 @@ function Dashboard() {
 
   const fetchResumes = async () => {
     const res = await axios.get(
-      "http://127.0.0.1:8000/api/users/resumes/",
+      "https://hiresense-ai-75v4.onrender.com/api/users/resumes/",
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setResumes(res.data || []);
@@ -38,7 +38,7 @@ function Dashboard() {
 
   const analyzeResume = async (id) => {
     const res = await axios.get(
-      `http://127.0.0.1:8000/api/users/analyze/${id}/`,
+      `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -54,7 +54,7 @@ function Dashboard() {
 
   const deleteResume = async (id) => {
     await axios.delete(
-      `http://127.0.0.1:8000/api/users/delete/${id}/`,
+      `https://hiresense-ai-75v4.onrender.com/api/users/delete/${id}/`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     fetchResumes();
@@ -98,7 +98,7 @@ function Dashboard() {
             <div style={styles.actions}>
               <a
                 style={styles.link}
-                href={`http://127.0.0.1:8000${r.file}`}
+                href={`https://hiresense-ai-75v4.onrender.com${r.file}`}
                 target="_blank"
               >
                 View
