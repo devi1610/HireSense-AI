@@ -15,7 +15,7 @@ function Register() {
 
     try {
       const res = await axios.post(
-        "https://hiresense-ai-75v4.onrender.com/api/users/register/",
+        "https://hiresense-ai-75v4.onrender.com/api/register/",
         {
           name:name,
           email:email,

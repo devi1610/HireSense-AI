@@ -26,7 +26,7 @@ function Dashboard() {
 
   const fetchResumes = async () => {
     const res = await axios.get(
-      "https://hiresense-ai-75v4.onrender.com/api/users/resumes/",
+      "https://hiresense-ai-75v4.onrender.com/api/resumes/",
       
     );
     setResumes(res.data || []);
@@ -38,7 +38,7 @@ function Dashboard() {
 
   const analyzeResume = async (id) => {
     const res = await axios.get(
-      `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`,
+      `https://hiresense-ai-75v4.onrender.com/api/analyze/${id}/`,
       
     );
 
@@ -54,7 +54,7 @@ function Dashboard() {
 
   const deleteResume = async (id) => {
     await axios.delete(
-      `https://hiresense-ai-75v4.onrender.com/api/users/delete/${id}/`,
+      `https://hiresense-ai-75v4.onrender.com/api/delete/${id}/`,
       
     );
     fetchResumes();
