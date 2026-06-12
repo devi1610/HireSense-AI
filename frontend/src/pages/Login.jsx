@@ -19,10 +19,10 @@ function Login() {
       setLoading(true);
 
       const res = await axios.post(
-        "https://hiresense-ai-75v4.onrender.com/api/token/",
+        "https://hiresense-ai-75v4.onrender.com/api/users/login/",
         {
-          username: email,
-          password: password,
+         email,
+         password
         }
       );
 

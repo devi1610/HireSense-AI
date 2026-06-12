@@ -27,7 +27,7 @@ function Dashboard() {
   const fetchResumes = async () => {
     const res = await axios.get(
       "https://hiresense-ai-75v4.onrender.com/api/users/resumes/",
-      { headers: { Authorization: `Bearer ${token}` } }
+      
     );
     setResumes(res.data || []);
   };
@@ -39,7 +39,7 @@ function Dashboard() {
   const analyzeResume = async (id) => {
     const res = await axios.get(
       `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      
     );
 
     setAnalysis(res.data);
@@ -55,7 +55,7 @@ function Dashboard() {
   const deleteResume = async (id) => {
     await axios.delete(
       `https://hiresense-ai-75v4.onrender.com/api/users/delete/${id}/`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      
     );
     fetchResumes();
   };
@@ -358,4 +358,3 @@ const styles = {
 };
 
  
-

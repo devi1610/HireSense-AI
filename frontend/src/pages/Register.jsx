@@ -17,9 +17,9 @@ function Register() {
       const res = await axios.post(
         "https://hiresense-ai-75v4.onrender.com/api/users/register/",
         {
-          name,
-          email,
-          password,
+          name:name,
+          email:email,
+          password:password,
         }
       );
 

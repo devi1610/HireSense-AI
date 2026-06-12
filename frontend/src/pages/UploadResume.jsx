@@ -33,7 +33,7 @@ function UploadResume() {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -42,7 +42,7 @@ function UploadResume() {
       navigate("/dashboard");
 
     } catch (err) {
-      console.log(err);
+      console.log(err.response?.data);
       alert("Upload failed");
     } finally {
       setLoading(false);
