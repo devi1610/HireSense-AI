@@ -19,7 +19,7 @@ function Login() {
       setLoading(true);
 
       const res = await axios.post(
-        "https://hiresense-ai-75v4.onrender.com/api/login/",
+        "https://hiresense-ai-75v4.onrender.com/api/users/login/",
         {
          email,
          password
