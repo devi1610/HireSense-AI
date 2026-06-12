@@ -28,11 +28,17 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1000);
-    } catch (err) {
-      console.log(err);
-      setMessage("Register failed ❌");
-    }
-  };
+    } 
+   catch (err) {
+  const errorData = err.response?.data;
+
+  if (errorData?.email) {
+    setMessage("Email already registered. Please login.");
+  } else {
+    setMessage("Registration failed ❌");
+  }
+}
+  }
 
   return (
     <div style={styles.container}>
