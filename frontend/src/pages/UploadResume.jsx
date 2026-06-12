@@ -29,7 +29,7 @@ function UploadResume() {
       setLoading(true);
 
       await axios.post(
-        "https://hiresense-ai-75v4.onrender.com/api/upload/",
+        "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
         formData,
         {
           headers: {

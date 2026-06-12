@@ -10,33 +10,43 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-  if (!email || !password) {
-    alert("Please fill all fields");
-    return;
-  }
+    if (!email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const res = await axios.post(
-      "https://hiresense-ai-75v4.onrender.com/api/users/login/",
-      { email, password }
-    );
+      const res = await axios.post(
+        "https://hiresense-ai-75v4.onrender.com/api/users/login/",
+        {
+         email,
+         password
+        }
+      );
 
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
 
-    alert("Login successful 🚀");
-    navigate("/dashboard");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: email.split("@")[0],
+          email: email,
+        })
+      );
 
-  } catch (err) {
-    console.log(err.response?.data || err.message);
-    alert(err.response?.data?.error || "Login failed ❌");
-  } finally {
-    setLoading(false);
-  }
-};
+      alert("Login successful 🚀");
+      navigate("/dashboard");
+    } catch (err) {
+      console.log(err);
+      alert("Login failed ❌ Check credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleLogin();
   };
