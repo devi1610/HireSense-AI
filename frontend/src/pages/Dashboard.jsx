@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -15,21 +14,21 @@ function Dashboard() {
   const analysisRef = useRef(null);
   const token = localStorage.getItem("access");
 
-  let user = {};
-  try {
-    user = JSON.parse(localStorage.getItem("user")) || {};
-  } catch {}
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     if (!token) navigate("/");
   }, [token]);
 
   const fetchResumes = async () => {
-    const res = await axios.get(
-      "https://hiresense-ai-75v4.onrender.com/api/users/resumes/",
-      
-    );
-    setResumes(res.data || []);
+    try {
+      const res = await axios.get(
+        "https://hiresense-ai-75v4.onrender.com/api/users/resumes/"
+      );
+      setResumes(res.data || []);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -37,55 +36,67 @@ function Dashboard() {
   }, []);
 
   const analyzeResume = async (id) => {
-    const res = await axios.get(
-      `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`,
-      
-    );
+    try {
+      const res = await axios.get(
+        `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`
+      );
 
-    setAnalysis(res.data);
-    setJobs(res.data?.recommended_jobs || []);
+      setAnalysis(res.data);
+      setJobs(res.data?.recommended_jobs || []);
+      localStorage.setItem("analysis", JSON.stringify(res.data));
 
-    localStorage.setItem("analysis", JSON.stringify(res.data));
-
-    setTimeout(() => {
-      analysisRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 200);
+      setTimeout(() => {
+        analysisRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 200);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteResume = async (id) => {
-    await axios.delete(
-      `https://hiresense-ai-75v4.onrender.com/api/users/delete/${id}/`,
-      
-    );
-    fetchResumes();
+    try {
+      await axios.delete(
+        `https://hiresense-ai-75v4.onrender.com/api/users/delete/${id}/`
+      );
+      fetchResumes();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
-    <div style={styles.page} className="dashboard-page">
-
-      {/* HEADER */}
-      <div style={styles.header}>
+    <div style={styles.page}>
+      
+      {/* NAVBAR */}
+      <div style={styles.navbar}>
         <div>
-          <h1 style={{ margin: 0 }}>HireSense AI</h1>
-          <p style={styles.sub}>AI Resume Intelligence Dashboard</p>
+          <h2 style={{ margin: 0 }}>HireSense AI</h2>
+          <p style={styles.subText}>Resume Intelligence Dashboard</p>
         </div>
 
-        <div style={styles.btnRow}>
-          <button style={styles.primaryBtn} onClick={() => navigate("/upload")}>
-            📤 Upload
+        <div style={styles.navActions}>
+          <button
+            style={styles.primaryBtn}
+            onClick={() => navigate("/upload")}
+          >
+            + Upload Resume
           </button>
 
-          <button style={styles.logoutBtn} onClick={() => {
-            localStorage.clear();
-            navigate("/");
-          }}>
+          <button
+            style={styles.logoutBtn}
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+          >
             Logout
           </button>
         </div>
       </div>
 
-      {/* RESUMES */}
-      <div style={styles.section}>
+      {/* MAIN */}
+      <div style={styles.container}>
+
         <h3>📄 Your Resumes</h3>
 
         {resumes.map((r) => (
@@ -120,196 +131,166 @@ function Dashboard() {
             </div>
           </div>
         ))}
-      </div>
 
-      {/* ANALYSIS (CLEAN SINGLE BOX) */}
-      {analysis && (
-        <div ref={analysisRef} style={styles.analysisBox}>
-          <h2>🤖 AI Analysis</h2>
+        {/* ANALYSIS */}
+        {analysis && (
+          <div ref={analysisRef} style={styles.analysisBox}>
+            <h2>🤖 AI Analysis</h2>
 
-          <div style={styles.grid}>
-            <div style={styles.block}>
-              <h4>🧠 Skills</h4>
-              <div style={styles.badges}>
-                {analysis.skills_detected?.map((s, i) => (
-                  <span key={i} style={styles.badge}>{s}</span>
-                ))}
-              </div>
+            <p><b>Score:</b> {analysis.score}</p>
+            <p><b>Roles:</b> {analysis.job_suggestions?.join(", ")}</p>
+
+            <p><b>Skills:</b></p>
+            <div style={styles.badges}>
+              {analysis.skills_detected?.map((s, i) => (
+                <span key={i} style={styles.badge}>{s}</span>
+              ))}
             </div>
 
-            <div style={styles.block}>
-              <h4>⚡ ATS Score</h4>
-              <h1 style={{ margin: 0 }}>{analysis.score}</h1>
-            </div>
-
-            <div style={styles.block}>
-              <h4>💼 Roles</h4>
-              <p>{analysis.job_suggestions?.join(", ")}</p>
-            </div>
-
-            <div style={styles.block}>
-              <h4>🚧 Missing Skills</h4>
-              <div style={styles.badges}>
-                {analysis.missing_skills?.length ? (
-                  analysis.missing_skills.map((s, i) => (
-                    <span key={i} style={{ ...styles.badge, background: "#fee2e2" }}>
-                      {s}
-                    </span>
-                  ))
-                ) : (
-                  <span style={styles.good}>All skills covered 🎉</span>
-                )}
-              </div>
+            <p style={{ marginTop: "10px" }}><b>Missing Skills:</b></p>
+            <div style={styles.badges}>
+              {analysis.missing_skills?.map((s, i) => (
+                <span key={i} style={{ ...styles.badge, background: "#fee2e2" }}>
+                  {s}
+                </span>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* JOBS (FIXED - NO DISAPPEARING ISSUE) */}
-      {jobs.length > 0 && (
-        <div style={styles.jobs}>
-          <h3>💼 Job Matches</h3>
+        {/* JOBS */}
+        {jobs.length > 0 && (
+          <div style={styles.jobs}>
+            <h3>💼 Job Matches</h3>
 
-          <div style={styles.jobGrid}>
-            {jobs.map((job, i) => (
-              <div key={i} style={styles.jobCard}>
-                <b>{job.role}</b>
+            <div style={styles.jobGrid}>
+              {jobs.map((job, i) => (
+                <div key={i} style={styles.jobCard}>
+                  <b>{job.role}</b>
 
-                <div style={styles.links}>
-                  <a href={job.links.linkedin} target="_blank">LinkedIn</a>
-                  <a href={job.links.naukri} target="_blank">Naukri</a>
-                  <a href={job.links.unstop} target="_blank">Unstop</a>
+                  <div style={styles.links}>
+                    <a href={job.links.linkedin} target="_blank">LinkedIn</a>
+                    <a href={job.links.naukri} target="_blank">Naukri</a>
+                    <a href={job.links.unstop} target="_blank">Unstop</a>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+      </div>
     </div>
   );
 }
 
 export default Dashboard;
 
-/* ================= CLEAN MODERN STYLES ================= */
+/* ================= STYLES ================= */
 const styles = {
   page: {
-    padding: "20px",
-    fontFamily: "Inter, Arial",
-    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
-    minHeight: "100vh",
+  padding: "15px",
+  background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
+  minHeight: "100vh",
+  fontFamily: "Arial",
+},
+
+  navbar: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: "12px",
+  padding: "15px",
+  background: "#fff",
+  borderRadius: "14px",
+  boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+},
+
+  container: {
+    maxWidth: "1100px",
+    margin: "0 auto",
+    padding: "0 10px",
   },
 
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-
-  sub: {
+  subText: {
+    margin: 0,
+    fontSize: "13px",
     color: "#64748b",
-    marginTop: "5px",
   },
 
-  btnRow: {
+  navActions: {
     display: "flex",
     gap: "10px",
     flexWrap: "wrap",
   },
-
   primaryBtn: {
-    background: "#6366f1",
-    color: "white",
-    padding: "10px 14px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+  background: "#6366f1",
+  color: "#fff",
+  border: "none",
+  padding: "10px 14px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  minWidth: "120px",
+  fontSize: "14px",
+},
 
-  logoutBtn: {
-    background: "#ef4444",
-    color: "white",
-    padding: "10px 14px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
-
-  section: {
-    marginTop: "20px",
-  },
-
-  card: {
-    background: "white",
-    padding: "15px",
-    borderRadius: "12px",
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "10px",
-    transition: "all 0.25s ease",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-
+logoutBtn: {
+  background: "#ef4444",
+  color: "#fff",
+  border: "none",
+  padding: "10px 14px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  minWidth: "120px",
+  fontSize: "14px",
+},
+  
+card: {
+  display: "flex",
+  justifyContent: "space-between",
+  flexWrap: "wrap",
+  gap: "12px",
+  padding: "14px",
+  background: "#fff",
+  marginBottom: "10px",
+  borderRadius: "12px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+},
   actions: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-    flexWrap: "wrap",
-  },
+  display: "flex",
+  gap: "8px",
+  flexWrap: "wrap",
+  alignItems: "center",
+},
 
   link: {
     color: "#6366f1",
     textDecoration: "none",
     fontWeight: "600",
-    transition: "0.2s",
   },
 
   actionBtn: {
     background: "#6366f1",
-    color: "white",
+    color: "#fff",
     border: "none",
     padding: "6px 10px",
     borderRadius: "8px",
-    cursor: "pointer",
-    transition: "0.2s",
   },
 
   deleteBtn: {
     background: "#ef4444",
-    color: "white",
+    color: "#fff",
     border: "none",
     padding: "6px 10px",
     borderRadius: "8px",
-    cursor: "pointer",
-    transition: "0.2s",
   },
 
   analysisBox: {
-    marginTop: "25px",
-    background: "white",
-    padding: "20px",
-    borderRadius: "16px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "15px",
-  },
-
-  block: {
-    background: "#f9fafb",
+    marginTop: "20px",
+    background: "#fff",
     padding: "15px",
-    borderRadius: "12px",
-    transition: "0.2s",
+    borderRadius: "14px",
   },
 
   badges: {
@@ -319,34 +300,26 @@ const styles = {
   },
 
   badge: {
-    background: "#e0e7ff",
-    padding: "5px 10px",
-    borderRadius: "20px",
-    fontSize: "12px",
-    transition: "0.2s",
-  },
-
-  good: {
-    color: "#16a34a",
-    fontWeight: "bold",
-  },
+  background: "#e0e7ff",
+  padding: "5px 10px",
+  borderRadius: "20px",
+  fontSize: "11px",
+},
 
   jobs: {
-    marginTop: "25px",
+    marginTop: "20px",
   },
 
   jobGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "15px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "10px",
   },
 
   jobCard: {
-    background: "white",
-    padding: "15px",
+    background: "#fff",
+    padding: "12px",
     borderRadius: "12px",
-    transition: "all 0.2s ease",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
   },
 
   links: {
@@ -355,6 +328,10 @@ const styles = {
     marginTop: "8px",
     flexWrap: "wrap",
   },
-};
 
- 
+  muted: {
+  fontSize: "12px",
+  color: "#64748b",
+  },
+
+};
