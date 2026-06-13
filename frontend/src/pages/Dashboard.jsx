@@ -12,14 +12,14 @@ function Dashboard() {
   const [jobs, setJobs] = useState([]);
 
   const analysisRef = useRef(null);
-  const token = localStorage.getItem("access");
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = localStorage.getItem("access");
 
   useEffect(() => {
     if (!token) navigate("/");
-  }, [token]);
+  }, [token, navigate]);
 
+  // ---------- FETCH RESUMES ----------
   const fetchResumes = async () => {
     try {
       const res = await axios.get(
@@ -35,14 +35,16 @@ function Dashboard() {
     fetchResumes();
   }, []);
 
+  // ---------- ANALYZE ----------
   const analyzeResume = async (id) => {
     try {
       const res = await axios.get(
         `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`
       );
 
-      setAnalysis(res.data);
+      setAnalysis(res.data || null);
       setJobs(res.data?.recommended_jobs || []);
+
       localStorage.setItem("analysis", JSON.stringify(res.data));
 
       setTimeout(() => {
@@ -53,6 +55,7 @@ function Dashboard() {
     }
   };
 
+  // ---------- DELETE ----------
   const deleteResume = async (id) => {
     try {
       await axios.delete(
@@ -66,7 +69,6 @@ function Dashboard() {
 
   return (
     <div style={styles.page}>
-      
       {/* NAVBAR */}
       <div style={styles.navbar}>
         <div>
@@ -75,10 +77,7 @@ function Dashboard() {
         </div>
 
         <div style={styles.navActions}>
-          <button
-            style={styles.primaryBtn}
-            onClick={() => navigate("/upload")}
-          >
+          <button style={styles.primaryBtn} onClick={() => navigate("/upload")}>
             + Upload Resume
           </button>
 
@@ -96,7 +95,6 @@ function Dashboard() {
 
       {/* MAIN */}
       <div style={styles.container}>
-
         <h3>📄 Your Resumes</h3>
 
         {resumes.map((r) => (
@@ -111,6 +109,7 @@ function Dashboard() {
                 style={styles.link}
                 href={`https://hiresense-ai-75v4.onrender.com${r.file}`}
                 target="_blank"
+                rel="noreferrer"
               >
                 View
               </a>
@@ -137,23 +136,47 @@ function Dashboard() {
           <div ref={analysisRef} style={styles.analysisBox}>
             <h2>🤖 AI Analysis</h2>
 
-            <p><b>Score:</b> {analysis.score}</p>
-            <p><b>Roles:</b> {analysis.job_suggestions?.join(", ")}</p>
+            <p>
+              <b>Score:</b> {analysis.score || 0}
+            </p>
 
+            {/* ROLES (FIXED - NO OBJECT OBJECT) */}
+            <p>
+              <b>Roles:</b>{" "}
+              {Array.isArray(analysis.job_suggestions)
+                ? analysis.job_suggestions.join(", ")
+                : "Not detected"}
+            </p>
+
+            {/* SKILLS */}
             <p><b>Skills:</b></p>
             <div style={styles.badges}>
-              {analysis.skills_detected?.map((s, i) => (
-                <span key={i} style={styles.badge}>{s}</span>
-              ))}
+              {Array.isArray(analysis.skills_detected) &&
+                analysis.skills_detected.map((s, i) => (
+                  <span key={i} style={styles.badge}>
+                    {s}
+                  </span>
+                ))}
             </div>
 
-            <p style={{ marginTop: "10px" }}><b>Missing Skills:</b></p>
+            {/* MISSING SKILLS */}
+            <p style={{ marginTop: "10px" }}>
+              <b>Missing Skills:</b>
+            </p>
             <div style={styles.badges}>
-              {analysis.missing_skills?.map((s, i) => (
-                <span key={i} style={{ ...styles.badge, background: "#fee2e2" }}>
-                  {s}
-                </span>
-              ))}
+              {Array.isArray(analysis.missing_skills) &&
+              analysis.missing_skills.length > 0 ? (
+                analysis.missing_skills.map((s, i) => (
+                  <span
+                    key={i}
+                    style={{ ...styles.badge, background: "#fee2e2" }}
+                  >
+                    {s}
+                  </span>
+                ))
+              ) : (
+                <span style={styles.badge}>All skills matched 🎉</span>
+              )}
             </div>
           </div>
         )}
@@ -169,43 +192,60 @@ function Dashboard() {
                   <b>{job.role}</b>
 
                   <div style={styles.links}>
-                    <a href={job.links.linkedin} target="_blank">LinkedIn</a>
-                    <a href={job.links.naukri} target="_blank">Naukri</a>
-                    <a href={job.links.unstop} target="_blank">Unstop</a>
+                    <a
+                      href={job?.links?.linkedin || "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      LinkedIn
+                    </a>
+
+                    <a
+                      href={job?.links?.naukri || "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Naukri
+                    </a>
+
+                    <a
+                      href={job?.links?.unstop || "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Unstop
+                    </a>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
 }
 
 export default Dashboard;
-
-/* ================= STYLES ================= */
 const styles = {
   page: {
-  padding: "15px",
-  background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
-  minHeight: "100vh",
-  fontFamily: "Arial",
-},
+    padding: "15px",
+    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
+    minHeight: "100vh",
+    fontFamily: "Arial",
+  },
 
   navbar: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  flexWrap: "wrap",
-  gap: "12px",
-  padding: "15px",
-  background: "#fff",
-  borderRadius: "14px",
-  boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-},
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "12px",
+    padding: "15px",
+    background: "#fff",
+    borderRadius: "14px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+  },
 
   container: {
     maxWidth: "1100px",
@@ -224,45 +264,47 @@ const styles = {
     gap: "10px",
     flexWrap: "wrap",
   },
-  primaryBtn: {
-  background: "#6366f1",
-  color: "#fff",
-  border: "none",
-  padding: "10px 14px",
-  borderRadius: "10px",
-  cursor: "pointer",
-  minWidth: "120px",
-  fontSize: "14px",
-},
 
-logoutBtn: {
-  background: "#ef4444",
-  color: "#fff",
-  border: "none",
-  padding: "10px 14px",
-  borderRadius: "10px",
-  cursor: "pointer",
-  minWidth: "120px",
-  fontSize: "14px",
-},
-  
-card: {
-  display: "flex",
-  justifyContent: "space-between",
-  flexWrap: "wrap",
-  gap: "12px",
-  padding: "14px",
-  background: "#fff",
-  marginBottom: "10px",
-  borderRadius: "12px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-},
+  primaryBtn: {
+    background: "#6366f1",
+    color: "#fff",
+    border: "none",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    minWidth: "120px",
+    fontSize: "14px",
+  },
+
+  logoutBtn: {
+    background: "#ef4444",
+    color: "#fff",
+    border: "none",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    minWidth: "120px",
+    fontSize: "14px",
+  },
+
+  card: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: "12px",
+    padding: "14px",
+    background: "#fff",
+    marginBottom: "10px",
+    borderRadius: "12px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+  },
+
   actions: {
-  display: "flex",
-  gap: "8px",
-  flexWrap: "wrap",
-  alignItems: "center",
-},
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
 
   link: {
     color: "#6366f1",
@@ -300,11 +342,11 @@ card: {
   },
 
   badge: {
-  background: "#e0e7ff",
-  padding: "5px 10px",
-  borderRadius: "20px",
-  fontSize: "11px",
-},
+    background: "#e0e7ff",
+    padding: "5px 10px",
+    borderRadius: "20px",
+    fontSize: "11px",
+  },
 
   jobs: {
     marginTop: "20px",
@@ -330,8 +372,7 @@ card: {
   },
 
   muted: {
-  fontSize: "12px",
-  color: "#64748b",
+    fontSize: "12px",
+    color: "#64748b",
   },
-
 };
