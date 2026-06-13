@@ -131,7 +131,7 @@ def analyze_resume(request, id):
             if skill in text:
                 user_skills.add(skill)
 
-        # ---------------- ROLE SYSTEM (CONTROLLED) ----------------
+        # ---------------- ROLE SYSTEM ----------------
         role_requirements = {
             "Backend Developer": {"python", "django", "sql"},
             "Frontend Developer": {"react", "javascript", "html", "css"},
@@ -148,7 +148,7 @@ def analyze_resume(request, id):
             if match >= 2:
                 job_suggestions.append(role)
 
-        # ---------------- MISSING SKILLS (FIXED LOGIC) ----------------
+        # ---------------- MISSING SKILLS ----------------
         required_skills = set()
 
         for role in job_suggestions:

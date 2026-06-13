@@ -19,7 +19,7 @@ function Dashboard() {
     if (!token) navigate("/");
   }, [token, navigate]);
 
-  // ---------- FETCH RESUMES ----------
+  // ---------------- FETCH RESUMES ----------------
   const fetchResumes = async () => {
     try {
       const res = await axios.get(
@@ -35,17 +35,19 @@ function Dashboard() {
     fetchResumes();
   }, []);
 
-  // ---------- ANALYZE ----------
+  // ---------------- ANALYZE RESUME ----------------
   const analyzeResume = async (id) => {
     try {
       const res = await axios.get(
         `https://hiresense-ai-75v4.onrender.com/api/users/analyze/${id}/`
       );
 
-      setAnalysis(res.data || null);
-      setJobs(res.data?.recommended_jobs || []);
+      const data = res.data || {};
 
-      localStorage.setItem("analysis", JSON.stringify(res.data));
+      setAnalysis(data);
+      setJobs(data.recommended_jobs || []);
+
+      localStorage.setItem("analysis", JSON.stringify(data));
 
       setTimeout(() => {
         analysisRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,7 +57,7 @@ function Dashboard() {
     }
   };
 
-  // ---------- DELETE ----------
+  // ---------------- DELETE RESUME ----------------
   const deleteResume = async (id) => {
     try {
       await axios.delete(
@@ -77,7 +79,10 @@ function Dashboard() {
         </div>
 
         <div style={styles.navActions}>
-          <button style={styles.primaryBtn} onClick={() => navigate("/upload")}>
+          <button
+            style={styles.primaryBtn}
+            onClick={() => navigate("/upload")}
+          >
             + Upload Resume
           </button>
 
@@ -140,7 +145,7 @@ function Dashboard() {
               <b>Score:</b> {analysis.score || 0}
             </p>
 
-            {/* ROLES (FIXED - NO OBJECT OBJECT) */}
+            {/* ROLES FIX */}
             <p>
               <b>Roles:</b>{" "}
               {Array.isArray(analysis.job_suggestions)
@@ -149,7 +154,10 @@ function Dashboard() {
             </p>
 
             {/* SKILLS */}
-            <p><b>Skills:</b></p>
+            <p>
+              <b>Skills:</b>
+            </p>
+
             <div style={styles.badges}>
               {Array.isArray(analysis.skills_detected) &&
                 analysis.skills_detected.map((s, i) => (
@@ -163,6 +171,7 @@ function Dashboard() {
             <p style={{ marginTop: "10px" }}>
               <b>Missing Skills:</b>
             </p>
+
             <div style={styles.badges}>
               {Array.isArray(analysis.missing_skills) &&
               analysis.missing_skills.length > 0 ? (
@@ -182,7 +191,7 @@ function Dashboard() {
         )}
 
         {/* JOBS */}
-        {jobs.length > 0 && (
+        {Array.isArray(jobs) && jobs.length > 0 && (
           <div style={styles.jobs}>
             <h3>💼 Job Matches</h3>
 
@@ -227,6 +236,9 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+/* ================= STYLES ================= */
+
 const styles = {
   page: {
     padding: "15px",
@@ -273,7 +285,6 @@ const styles = {
     borderRadius: "10px",
     cursor: "pointer",
     minWidth: "120px",
-    fontSize: "14px",
   },
 
   logoutBtn: {
@@ -284,7 +295,6 @@ const styles = {
     borderRadius: "10px",
     cursor: "pointer",
     minWidth: "120px",
-    fontSize: "14px",
   },
 
   card: {
