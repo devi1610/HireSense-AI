@@ -87,7 +87,7 @@ function Dashboard() {
       <header className="dashboard-header">
         <div className="dashboard-nav-container">
           <div className="logo" onClick={() => navigate("/")}>
-            <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain" }} />
+            <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
           </div>
 
           <div className="dashboard-user-info">

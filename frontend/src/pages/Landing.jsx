@@ -257,7 +257,7 @@ const styles = {
     width: "100%",
     maxWidth: "1440px",
     margin: "0 auto",
-    padding: "20px 32px",
+    padding: "40px 32px",
   },
 
   heroGrid: {
@@ -606,7 +606,7 @@ const styles = {
   featuresSection: {
     maxWidth: "1440px",
     margin: "0 auto",
-    padding: "30px 32px",
+    padding: "50px 32px",
     textAlign: "center",
     width: "100%",
   },

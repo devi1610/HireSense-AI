@@ -60,7 +60,7 @@ function UploadResume() {
 
         {/* LOGO */}
         <div style={styles.logo} onClick={() => navigate("/dashboard")}>
-          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain" }} />
+          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
         </div>
 
         <h1 style={styles.title}>Upload Resume</h1>
