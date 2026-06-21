@@ -5,24 +5,20 @@ import { useNavigate } from "react-router-dom";
 function UploadResume() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const token = localStorage.getItem("access");
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !file) {
-      alert("Please fill all fields");
+    if (!file) {
+      alert("Please select a file first");
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
+    formData.append("name", "Candidate");
+    formData.append("email", "candidate@example.com");
     formData.append("file", file);
 
     try {
@@ -38,7 +34,7 @@ function UploadResume() {
         }
       );
 
-      alert("Resume uploaded successfully 🚀");
+      alert("Resume uploaded successfully! 🚀");
       navigate("/dashboard");
 
     } catch (err) {
@@ -50,45 +46,64 @@ function UploadResume() {
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
+    <div className="center-container">
+      <div className="glass-card" style={styles.card}>
+        
+        {/* Back to Dashboard Link */}
+        <button className="back-to-home-btn" onClick={() => navigate("/dashboard")}>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginRight: "6px" }}>
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Dashboard
+        </button>
 
-        <h1 style={styles.title}>📤 Upload Resume</h1>
+        {/* LOGO */}
+        <div style={styles.logo} onClick={() => navigate("/dashboard")}>
+          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain" }} />
+        </div>
 
-        <p style={styles.subtitle}>
-          Upload your resume and get AI-powered analysis instantly.
-        </p>
+        <h1 style={styles.title}>Upload Resume</h1>
+        <p style={styles.subtitle}>Submit your PDF or Word document for real-time AI parsing and analysis.</p>
 
         <form onSubmit={handleUpload}>
-
-          <input
-            type="text"
-            placeholder="Full Name"
-            style={styles.input}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          <input
-            type="email"
-            placeholder="Email Address"
-            style={styles.input}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            type="file"
-            style={styles.input}
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+          
+          {/* Styled File Input Zone */}
+          <div className="form-group">
+            <label className="form-label">
+              Resume Document <span className="required-asterisk">*</span>
+            </label>
+            <div className="file-upload-wrapper">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5" className="file-upload-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
+              </svg>
+              <span className="file-upload-text">Click to choose resume file</span>
+              <span className="file-upload-subtext">PDF, DOCX, or TXT up to 10MB</span>
+              <input
+                type="file"
+                accept=".pdf,.docx,.doc,.txt"
+                onChange={(e) => setFile(e.target.files[0])}
+                required
+                disabled={loading}
+              />
+              {file && (
+                <div className="file-upload-selected">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  Selected: {file.name}
+                </div>
+              )}
+            </div>
+          </div>
 
           <button
             type="submit"
-            style={styles.button}
+            className="btn btn-primary"
+            style={styles.submitBtn}
             disabled={loading}
           >
-            {loading ? "Uploading..." : "Upload Resume"}
+            {loading ? "Uploading Resume..." : "Upload Resume"}
           </button>
 
         </form>
@@ -101,53 +116,40 @@ function UploadResume() {
 export default UploadResume;
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
-    padding: "20px",
-  },
-
   card: {
     width: "100%",
     maxWidth: "500px",
-    background: "#fff",
-    padding: "35px",
-    borderRadius: "20px",
-    boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
-  },
-
-  title: {
+    padding: "44px 36px",
     textAlign: "center",
-    marginBottom: "10px",
   },
-
-  subtitle: {
-    textAlign: "center",
-    color: "#64748b",
-    marginBottom: "25px",
-  },
-
-  input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "10px",
-    border: "1px solid #dbeafe",
-    fontSize: "14px",
-    boxSizing: "border-box",
-  },
-
-  button: {
-    width: "100%",
-    padding: "12px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#6366f1",
-    color: "white",
-    fontWeight: "600",
+  logo: {
+    display: "inline-flex",
+    alignItems: "center",
     cursor: "pointer",
+    marginBottom: "20px",
+  },
+  logoText: {
+    fontFamily: "var(--font-title)",
+    fontSize: "1.25rem",
+    fontWeight: "800",
+    letterSpacing: "-0.5px",
+    color: "var(--text-main)",
+  },
+  title: {
+    fontSize: "1.75rem",
+    fontWeight: "800",
+    color: "var(--text-main)",
+    marginBottom: "8px",
+    letterSpacing: "-0.5px",
+  },
+  subtitle: {
+    fontSize: "0.85rem",
+    color: "var(--text-muted)",
+    marginBottom: "28px",
+    lineHeight: "1.5",
+  },
+  submitBtn: {
+    width: "100%",
+    marginTop: "16px",
   },
 };
