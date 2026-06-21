@@ -9,7 +9,7 @@ function Navbar() {
     <header className="main-header">
       <div className="nav-container">
         <div className="logo" onClick={() => navigate("/")}>
-          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
+          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "40px", width: "auto", display: "block", objectFit: "contain" }} />
         </div>
 
         <nav className="nav-links">

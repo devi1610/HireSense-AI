@@ -87,7 +87,7 @@ function Dashboard() {
       <header className="dashboard-header">
         <div className="dashboard-nav-container">
           <div className="logo" onClick={() => navigate("/")}>
-            <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
+            <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "40px", width: "auto", display: "block", objectFit: "contain" }} />
           </div>
 
           <div className="dashboard-user-info">
@@ -115,7 +115,7 @@ function Dashboard() {
 
       {/* Main Container */}
       <main className="dashboard-main">
-        <div className="dashboard-grid">
+        <div className="dashboard-grid dashboard-grid-mobile">
           
           {/* Left Column: Manage Resumes */}
           <section className="dashboard-left">
@@ -157,7 +157,7 @@ function Dashboard() {
                       <p className="resume-email">{r.email}</p>
                     </div>
 
-                    <div className="resume-actions">
+                    <div className="resume-actions resume-actions-mobile">
                       <a
                         className="action-view"
                         href={`https://hiresense-ai-75v4.onrender.com${r.file}`}

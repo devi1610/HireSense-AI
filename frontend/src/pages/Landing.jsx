@@ -13,10 +13,10 @@ function Landing() {
       <Navbar />
 
       {/* HERO SECTION */}
-      <main style={styles.heroSection}>
-        <div style={styles.heroGrid}>
+      <main style={styles.heroSection} className="hero-section-mobile">
+        <div style={styles.heroGrid} className="hero-grid-mobile">
           {/* Left Content */}
-          <div style={styles.heroLeft} className="fade-in-up">
+          <div style={styles.heroLeft} className="fade-in-up hero-left-mobile">
             <div style={styles.badge}>
               <span style={styles.badgePulse}></span>
               Powered by GPT-4o & Claude 3.5
@@ -31,7 +31,7 @@ function Landing() {
               Upload your resume and get an instant ATS score, discover missing keywords, and match with the best-fitting jobs in seconds.
             </p>
 
-            <div style={styles.ctaGroup}>
+            <div style={styles.ctaGroup} className="cta-group-mobile">
               <button
                 style={styles.ctaPrimary}
                 onClick={() => navigate("/register")}
@@ -51,14 +51,14 @@ function Landing() {
               </button>
             </div>
 
-            <div style={styles.statsRow}>
+            <div style={styles.statsRow} className="stats-row-mobile">
               <div style={styles.statItem}>
-                <span style={styles.statVal}>98%</span>
+                <span style={styles.statVal} className="stat-val-mobile">98%</span>
                 <span style={styles.statLabel}>ATS Accuracy</span>
               </div>
               <div style={styles.statDivider}></div>
               <div style={styles.statItem}>
-                <span style={styles.statVal}>10k+</span>
+                <span style={styles.statVal} className="stat-val-mobile">10k+</span>
                 <span style={styles.statLabel}>Resumes Analyzed</span>
               </div>
             </div>
@@ -66,7 +66,7 @@ function Landing() {
 
           {/* Right Visual Card */}
           <div style={styles.heroRight} className="fade-in-up">
-            <div className="premium-shadow-card" style={styles.mockCard}>
+            <div className="premium-shadow-card mock-card-mobile" style={styles.mockCard}>
               {/* Applicant Header */}
               <div style={styles.mockHeader}>
                 <div style={styles.mockUser}>
@@ -181,11 +181,11 @@ function Landing() {
       </main>
 
       {/* FEATURES SECTION */}
-      <section style={styles.featuresSection}>
+      <section style={styles.featuresSection} className="features-section-mobile">
         <h2 style={styles.featuresHeading}>Everything you need to beat the ATS</h2>
         <p style={styles.featuresSub}>Our platform is optimized for candidates aiming for Tier 1 tech jobs.</p>
         
-        <div style={styles.featuresGrid}>
+        <div style={styles.featuresGrid} className="features-grid-mobile">
           {/* Card 1 */}
           <div className="glass-card" style={styles.featureCard}>
             <div style={styles.featureIconBox}>

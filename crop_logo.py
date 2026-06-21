@@ -1,66 +1,58 @@
-from PIL import Image, ImageFilter
+from PIL import Image
 
-def make_transparent_floodfill():
-    img = Image.open("c:\\Users\\MALLESWARI\\Videos\\HireSense-AI\\frontend\\public\\logo_cropped_raw.png")
-    img = img.convert("RGBA")
+img_path = r"c:\Users\MALLESWARI\Videos\HireSense-AI\frontend\public\logo.png"
+
+try:
+    img = Image.open(img_path).convert("RGBA")
+    data = img.getdata()
     width, height = img.size
+
+    # Pass 1: Make background pure white based on a more aggressive threshold
+    # The grey background in the screenshot is probably around 230-245.
+    new_data = []
+    for r, g, b, a in data:
+        # If it's very light (e.g., r>210, g>210, b>210), force to white
+        if r > 210 and g > 210 and b > 210:
+            new_data.append((255, 255, 255, 255))
+        else:
+            new_data.append((r, g, b, 255))
+
+    img.putdata(new_data)
     
-    gray = img.convert("L")
+    # Pass 2: Find bounding box of non-white pixels to CROP out dead space
+    bbox_left = width
+    bbox_right = 0
+    bbox_top = height
+    bbox_bottom = 0
     
-    # Collect initial queue of all border pixels
-    visited = set()
-    queue = []
+    pixels = img.load()
+    has_content = False
     
-    for x in range(width):
-        queue.append((x, 0))
-        queue.append((x, height - 1))
-    for y in range(height):
-        queue.append((0, y))
-        queue.append((width - 1, y))
-        
-    bg_mask = Image.new("L", (width, height), 0)
-    
-    # Threshold check: paper pixels are generally very bright (>160)
-    # Let's inspect some corner pixels to verify
-    corner_vals = [gray.getpixel((0,0)), gray.getpixel((width-1, 0)), 
-                   gray.getpixel((0, height-1)), gray.getpixel((width-1, height-1))]
-    avg_corner = sum(corner_vals) / len(corner_vals)
-    print("Corner gray values:", corner_vals, "Average:", avg_corner)
-    
-    # We will BFS to find connected background components
-    while queue:
-        x, y = queue.pop(0)
-        if (x, y) in visited:
-            continue
-        visited.add((x, y))
-        
-        # Check if the pixel is part of the light paper background
-        val = gray.getpixel((x, y))
-        if val > 165: # Background threshold
-            bg_mask.putpixel((x, y), 255)
-            # Traverse 4-connected neighbors
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < width and 0 <= ny < height:
-                    if (nx, ny) not in visited:
-                        queue.append((nx, ny))
-                        
-    # Blur the mask to make the transparency transitions smooth (anti-aliasing)
-    bg_mask_blurred = bg_mask.filter(ImageFilter.GaussianBlur(1.2))
-    
-    # Apply mask to alpha channel
-    pix = img.load()
-    pix_mask = bg_mask_blurred.load()
     for y in range(height):
         for x in range(width):
-            r, g, b, a = pix[x, y]
-            m = pix_mask[x, y]
-            # m is 255 for background (transparent), 0 for foreground (opaque)
-            # We want new_a to be 0 for m=255 and 255 for m=0
-            new_a = max(0, min(255, 255 - m))
-            pix[x, y] = (r, g, b, new_a)
-            
-    img.save("c:\\Users\\MALLESWARI\\Videos\\HireSense-AI\\frontend\\public\\logo_transparent.png")
-    print("Transparent logo created successfully as logo_transparent.png!")
-
-make_transparent_floodfill()
+            r, g, b, a = pixels[x, y]
+            # If not pure white, it's content
+            if r < 250 or g < 250 or b < 250:
+                has_content = True
+                if x < bbox_left: bbox_left = x
+                if x > bbox_right: bbox_right = x
+                if y < bbox_top: bbox_top = y
+                if y > bbox_bottom: bbox_bottom = y
+                
+    if has_content:
+        # Add a tiny padding (e.g. 10 pixels) so it's not flush to the edge
+        pad = 10
+        bbox_left = max(0, bbox_left - pad)
+        bbox_top = max(0, bbox_top - pad)
+        bbox_right = min(width, bbox_right + pad)
+        bbox_bottom = min(height, bbox_bottom + pad)
+        
+        cropped_img = img.crop((bbox_left, bbox_top, bbox_right, bbox_bottom))
+        cropped_img.save(img_path)
+        print("Logo successfully cropped and background made white!")
+    else:
+        print("Image is entirely white, skipping crop.")
+        img.save(img_path)
+        
+except Exception as e:
+    print(f"Error: {e}")

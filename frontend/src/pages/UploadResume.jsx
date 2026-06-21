@@ -47,7 +47,7 @@ function UploadResume() {
 
   return (
     <div className="center-container">
-      <div className="glass-card" style={styles.card}>
+      <div className="glass-card auth-card-mobile" style={styles.card}>
         
         {/* Back to Dashboard Link */}
         <button className="back-to-home-btn" onClick={() => navigate("/dashboard")}>
@@ -60,7 +60,7 @@ function UploadResume() {
 
         {/* LOGO */}
         <div style={styles.logo} onClick={() => navigate("/dashboard")}>
-          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
+          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "40px", width: "auto", display: "block", objectFit: "contain" }} />
         </div>
 
         <h1 style={styles.title}>Upload Resume</h1>

@@ -102,7 +102,7 @@ function Login() {
 
   return (
     <div className="center-container">
-      <div className="glass-card" style={styles.card}>
+      <div className="glass-card auth-card-mobile" style={styles.card}>
         <button className="back-to-home-btn" onClick={() => navigate("/")}>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -113,7 +113,7 @@ function Login() {
         
         {/* LOGO */}
         <div style={styles.logo} onClick={() => navigate("/")}>
-          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain", filter: "contrast(1.25) saturate(1.15) brightness(0.9)" }} />
+          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "40px", width: "auto", display: "block", objectFit: "contain" }} />
         </div>
 
         <h1 style={styles.title}>Sign In</h1>
