@@ -255,14 +255,14 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    maxWidth: "1440px",
+    maxWidth: "1280px",
     margin: "0 auto",
     padding: "40px 32px",
   },
 
   heroGrid: {
     display: "grid",
-    gridTemplateColumns: "1.1fr 0.9fr",
+    gridTemplateColumns: "1.2fr 1fr",
     gap: "60px",
     alignItems: "center",
     width: "100%",
@@ -389,12 +389,11 @@ const styles = {
   },
 
   mockCard: {
-    width: "100%",
-    maxWidth: "460px",
+    padding: "64px",
+    borderRadius: "40px",
     background: "#ffffff",
-    borderRadius: "20px",
-    border: "1px solid var(--border-color)",
-    padding: "32px 28px",
+    width: "100%",
+    maxWidth: "640px",
     textAlign: "center",
   },
 
