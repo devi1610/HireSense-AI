@@ -16,7 +16,7 @@ function Pricing() {
           </p>
         </div>
 
-        <div style={styles.pricingGrid}>
+        <div style={styles.pricingGrid} className="pricing-grid">
           {/* Card 1: Free */}
           <div className="glass-card" style={styles.card}>
             <div style={styles.cardHeader}>
@@ -149,7 +149,7 @@ const styles = {
     background: "var(--background)",
   },
   main: {
-    maxWidth: "1440px",
+    maxWidth: "1280px",
     width: "100%",
     margin: "0 auto",
     padding: "60px 32px",
