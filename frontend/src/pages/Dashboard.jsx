@@ -6,9 +6,14 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [resumes, setResumes] = useState([]);
-  const [analysis, setAnalysis] = useState(
-    JSON.parse(localStorage.getItem("analysis")) || null
-  );
+  const [analysis, setAnalysis] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("analysis")) || null;
+    } catch {
+      localStorage.removeItem("analysis");
+      return null;
+    }
+  });
   const [jobs, setJobs] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState(null);
 

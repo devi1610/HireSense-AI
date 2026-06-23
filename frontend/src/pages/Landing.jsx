@@ -7,8 +7,8 @@ function Landing() {
   return (
     <div style={styles.page} className="grid-bg">
       {/* Background Glow Blobs */}
-      <div className="glow-blob" style={{ top: "10%", right: "5%", width: "500px", height: "500px" }}></div>
-      <div className="glow-blob" style={{ top: "40%", left: "-10%", width: "600px", height: "600px" }}></div>
+      <div className="glow-blob" style={{ position: "absolute", top: "10%", right: "5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%)", filter: "blur(60px)", zIndex: 0, pointerEvents: "none" }}></div>
+      <div className="glow-blob" style={{ position: "absolute", top: "40%", left: "-10%", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 70%)", filter: "blur(60px)", zIndex: 0, pointerEvents: "none" }}></div>
 
       <Navbar />
 
@@ -244,7 +244,7 @@ const styles = {
     background: "radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.05), transparent 40%), var(--background)",
     padding: "0",
     position: "relative",
-    overflow: "hidden",
+    overflowX: "hidden",
   },
 
 
