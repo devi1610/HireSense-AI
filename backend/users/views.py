@@ -176,6 +176,24 @@ def analyze_resume(request, id):
         # ---------------- ATS SCORE ----------------
         score = min(100, len(user_skills) * 12)
 
+        ai_suggestions = []
+
+        if missing_skills:
+           ai_suggestions.append(
+                "Add missing skills: " + ", ".join(missing_skills)
+            )
+
+        if score < 60:
+            ai_suggestions.append("ATS score is low — add more job keywords & projects")
+        elif score < 80:
+            ai_suggestions.append("Good profile — improve project descriptions for better impact")
+        else:
+            ai_suggestions.append("Strong resume — tailor it for specific job roles")
+
+        if "git" not in user_skills and "github" not in user_skills:
+            ai_suggestions.append("Add Git/GitHub experience (important for recruiters)")
+
+
         # ---------------- RESPONSE ----------------
         return Response({
             "skills_detected": list(user_skills),

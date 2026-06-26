@@ -34,7 +34,7 @@ function UploadResume() {
         }
       );
 
-      alert("Resume uploaded successfully! 🚀");
+      alert("Resume uploaded successfully 🚀");
       navigate("/dashboard");
 
     } catch (err) {
@@ -46,110 +46,173 @@ function UploadResume() {
   };
 
   return (
-    <div className="center-container">
-      <div className="glass-card auth-card-mobile" style={styles.card}>
-        
-        {/* Back to Dashboard Link */}
-        <button className="back-to-home-btn" onClick={() => navigate("/dashboard")}>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginRight: "6px" }}>
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Dashboard
-        </button>
+    <>
+      {/* ================= UPLOAD PAGE ================= */}
+      <div className="upload-page">
 
-        {/* LOGO */}
-        <div style={styles.logo} onClick={() => navigate("/dashboard")}>
-          <img src="/logo.png" alt="HireSense AI Logo" style={{ height: "40px", width: "auto", display: "block", objectFit: "contain" }} />
-        </div>
+        <div className="upload-card">
 
-        <h1 style={styles.title}>Upload Resume</h1>
-        <p style={styles.subtitle}>Submit your PDF or Word document for real-time AI parsing and analysis.</p>
+          {/* Back Button */}
+          <button className="back-btn" onClick={() => navigate("/dashboard")}>
+            ← Dashboard
+          </button>
 
-        <form onSubmit={handleUpload}>
-          
-          {/* Styled File Input Zone */}
-          <div className="form-group">
-            <label className="form-label">
-              Resume Document <span className="required-asterisk">*</span>
-            </label>
-            <div className="file-upload-wrapper">
-              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5" className="file-upload-icon">
+          {/* Logo */}
+          <div className="upload-logo" onClick={() => navigate("/dashboard")}>
+            <img src="/logo.png" alt="logo" height="40" />
+          </div>
+
+          {/* Title */}
+          <h1 className="upload-title">Upload Resume</h1>
+          <p className="upload-subtitle">
+            Upload your resume for AI-powered ATS scoring and job matching
+          </p>
+
+          <form onSubmit={handleUpload}>
+
+            {/* FILE UPLOAD BOX */}
+            <div
+              className="clean-upload"
+              onClick={() => document.getElementById("resumeFile").click()}
+            >
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
               </svg>
-              <span className="file-upload-text">Click to choose resume file</span>
-              <span className="file-upload-subtext">PDF, DOCX, or TXT up to 10MB</span>
+
+              <span className="file-title">Click to upload your resume</span>
+              <span className="file-subtitle">PDF, DOCX, TXT (Max 10MB)</span>
+
+              {file && (
+                <div className="file-selected">
+                  ✓ {file.name}
+                </div>
+              )}
+
               <input
+                id="resumeFile"
                 type="file"
                 accept=".pdf,.docx,.doc,.txt"
                 onChange={(e) => setFile(e.target.files[0])}
-                required
-                disabled={loading}
+                hidden
               />
-              {file && (
-                <div className="file-upload-selected">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Selected: {file.name}
-                </div>
-              )}
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={styles.submitBtn}
-            disabled={loading}
-          >
-            {loading ? "Uploading Resume..." : "Upload Resume"}
-          </button>
+            {/* BUTTON */}
+            <button className="upload-btn" disabled={loading}>
+              {loading ? "Uploading..." : "Upload Resume"}
+            </button>
 
-        </form>
+          </form>
 
+        </div>
       </div>
-    </div>
+
+      {/* ================= INLINE CSS ================= */}
+      <style>{`
+        .upload-page {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f4f7fb;
+          padding: 20px;
+        }
+
+        .upload-card {
+          width: 100%;
+          max-width: 520px;
+          background: rgba(255,255,255,0.85);
+          border: 1px solid rgba(15,23,42,0.08);
+          border-radius: 16px;
+          padding: 28px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+          backdrop-filter: blur(10px);
+          text-align: center;
+        }
+
+        .upload-title {
+          font-size: 20px;
+          font-weight: 700;
+          margin-top: 10px;
+          color: #0f172a;
+        }
+
+        .upload-subtitle {
+          font-size: 13px;
+          color: #64748b;
+          margin-bottom: 20px;
+        }
+
+        .clean-upload {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 26px;
+          border: 2px dashed rgba(79,70,229,0.3);
+          border-radius: 14px;
+          background: #f8fafc;
+          cursor: pointer;
+          transition: 0.2s;
+          gap: 6px;
+        }
+
+        .clean-upload:hover {
+          border-color: #4f46e5;
+          background: #eef2ff;
+        }
+
+        .file-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #0f172a;
+        }
+
+        .file-subtitle {
+          font-size: 12px;
+          color: #64748b;
+        }
+
+        .file-selected {
+          margin-top: 10px;
+          font-size: 12px;
+          color: #16a34a;
+          font-weight: 500;
+        }
+
+        .upload-btn {
+          width: 100%;
+          margin-top: 16px;
+          padding: 12px;
+          background: #4f46e5;
+          color: white;
+          border: none;
+          border-radius: 10px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .upload-btn:hover {
+          background: #4338ca;
+        }
+
+        .back-btn {
+          position: absolute;
+          left: 20px;
+          top: 20px;
+          background: transparent;
+          border: none;
+          font-size: 14px;
+          cursor: pointer;
+          color: #64748b;
+        }
+
+        .back-btn:hover {
+          color: #0f172a;
+        }
+      `}</style>
+    </>
   );
 }
 
 export default UploadResume;
-
-const styles = {
-  card: {
-    width: "100%",
-    maxWidth: "500px",
-    padding: "44px 36px",
-    textAlign: "center",
-  },
-  logo: {
-    display: "inline-flex",
-    alignItems: "center",
-    cursor: "pointer",
-    marginBottom: "20px",
-  },
-  logoText: {
-    fontFamily: "var(--font-title)",
-    fontSize: "1.25rem",
-    fontWeight: "800",
-    letterSpacing: "-0.5px",
-    color: "var(--text-main)",
-  },
-  title: {
-    fontSize: "1.75rem",
-    fontWeight: "800",
-    color: "var(--text-main)",
-    marginBottom: "8px",
-    letterSpacing: "-0.5px",
-  },
-  subtitle: {
-    fontSize: "0.85rem",
-    color: "var(--text-muted)",
-    marginBottom: "28px",
-    lineHeight: "1.5",
-  },
-  submitBtn: {
-    width: "100%",
-    marginTop: "16px",
-  },
-};

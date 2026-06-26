@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -300,6 +301,33 @@ function Dashboard() {
                     )}
                   </div>
                 </div>
+
+                {/* AI Improvement Suggestions */}
+              <div className="glass-card analysis-detail-card">
+              <h3 className="detail-card-title">
+                🧠 AI Improvement Suggestions
+              </h3>
+
+              <div className="badge-grid">
+                {Array.isArray(analysis.ai_suggestions) &&
+                analysis.ai_suggestions.length > 0 ? (
+                  analysis.ai_suggestions.map((s, i) => (
+                   <span key={i} className="badge-missing">
+                      {s}
+                  </span>
+                ))
+              ) : analysis.score < 70 ? (
+                 <span className="badge-missing">
+                     ⚠ Resume needs improvement — add skills & projects
+                </span>
+              ) : (
+
+                <span className="badge-matched">
+                    Your resume looks well optimized 🎉
+                </span>
+              )}
+           </div>
+        </div>
 
                 {/* Jobs Match Grid */}
                 {Array.isArray(jobs) && jobs.length > 0 && (

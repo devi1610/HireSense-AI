@@ -1,22 +1,323 @@
-.card:hover {
+/* =========================
+   HIRE SENSE AI - FINAL SAAS UI
+   PREMIUM DASHBOARD DESIGN SYSTEM
+   ========================= */
+
+/* ===== ROOT ===== */
+:root {
+  --bg: #f4f7fb;
+  --card: rgba(255, 255, 255, 0.78);
+  --border: rgba(15, 23, 42, 0.08);
+
+  --text-main: #0f172a;
+  --text-light: #64748b;
+
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+
+  --success: #16a34a;
+  --error: #dc2626;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ===== GLOBAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+/* ===== PAGE ===== */
+.dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+}
+
+.dashboard-nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== MAIN ===== */
+.dashboard-main {
+  flex: 1;
+  padding: 28px 18px;
+}
+
+/* ===== GRID (FIXED SPACING) ===== */
+.dashboard-grid {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 34px;
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ===== TITLE ===== */
+.dashboard-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ===== BUTTON ===== */
+.nav-btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+/* ===== GLASS CARD (PREMIUM FIX) ===== */
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  backdrop-filter: blur(10px);
+}
+
+/* ===== RESUME LIST ===== */
+.resumes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== RESUME CARD (CLEAN PREMIUM) ===== */
+.resume-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-radius: 14px;
+  transition: 0.25s ease;
+}
+
+.resume-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
 }
 
-.jobCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+.resume-card.active {
+  border: 1px solid var(--primary);
 }
 
-.block:hover {
-  transform: scale(1.02);
+/* ===== TEXT ===== */
+.resume-name {
+  font-size: 15px;
+  font-weight: 600;
 }
 
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.resume-email {
+  font-size: 13px;
+  color: var(--text-light);
 }
 
-a:hover {
-  text-decoration: underline;
+/* ===== ACTIONS ===== */
+.resume-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ===== BUTTONS ===== */
+.action-view,
+.action-analyze,
+.action-delete {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.action-view {
+  background: #eef2ff;
+  color: var(--primary);
+}
+
+.action-analyze {
+  background: #ecfdf5;
+  color: var(--success);
+}
+
+.action-delete {
+  background: #fef2f2;
+  color: var(--error);
+}
+
+/* ===== EMPTY STATES ===== */
+.empty-state,
+.empty-analysis-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-light);
+}
+
+/* ===== ANALYSIS HEADER ===== */
+.analysis-score-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== TAG ===== */
+.analysis-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 1px;
+}
+
+/* ===== SECTION TITLE FIX ===== */
+.detail-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* ===== BADGES ===== */
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge-skill {
+  background: #eef2ff;
+  color: var(--primary);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.badge-missing {
+  background: #fef2f2;
+  color: var(--error);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.badge-matched {
+  background: #ecfdf5;
+  color: var(--success);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* ===== JOBS (PREMIUM GRID FIX) ===== */
+.jobs-match-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.job-match-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  transition: 0.25s;
+}
+
+.job-match-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+}
+
+.job-role-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ===== JOB LINKS ===== */
+.job-btn-linkedin,
+.job-btn-naukri,
+.job-btn-unstop {
+  font-size: 11px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-right: 4px;
+}
+
+.job-btn-linkedin {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.job-btn-naukri {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.job-btn-unstop {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-score-card {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .resume-actions {
+    flex-wrap: wrap;
+  }
 }
