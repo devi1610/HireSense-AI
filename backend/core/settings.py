@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-b#=l5yuc=jxl#mfj!le=c*@tdf1f@d76k+($3m5k)&=h3!(+ra'
 
-DEBUG = True  # (later production lo False cheyyali)
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "hiresense-ai-75v4.onrender.com",
@@ -24,11 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
     'corsheaders',
     'cloudinary',
-    'cloudinary_storage',  
+    'cloudinary_storage',
     'users',
 ]
 
@@ -36,9 +35,7 @@ INSTALLED_APPS = [
 # ================= MIDDLEWARE =================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',  # MUST be high
-
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,8 +84,27 @@ REST_FRAMEWORK = {
 
 # ================= CORS =================
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
-# optional safe config
 CSRF_TRUSTED_ORIGINS = [
     "https://hiresense-ai-75v4.onrender.com",
     "https://*.onrender.com"
@@ -104,19 +120,13 @@ USE_TZ = True
 
 # ================= STATIC =================
 STATIC_URL = 'static/'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
-
 # ================= CLOUDINARY =================
-
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'drihinial'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '549549627323677'),
