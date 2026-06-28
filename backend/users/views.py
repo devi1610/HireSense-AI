@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from .models import UserProfile, Resume
 from .serializers import UserSerializer
 import PyPDF2
-import urllib.request
 import io
+import requests as req
 
 
 # ---------------- REGISTER ----------------
@@ -108,8 +108,8 @@ def analyze_resume(request, id):
         text = ""
         file_url = resume.file.url
 
-        with urllib.request.urlopen(file_url) as response:
-            file_bytes = io.BytesIO(response.read())
+        response = req.get(file_url, timeout=30)
+        file_bytes = io.BytesIO(response.content)
 
         reader = PyPDF2.PdfReader(file_bytes)
         for page in reader.pages:
