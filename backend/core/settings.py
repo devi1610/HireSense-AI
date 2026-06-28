@@ -25,6 +25,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'cloudinary',
+    'clodinary_storage'  
     'users',
 ]
 
@@ -106,3 +108,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+import cloudinary
+
+CLOUDINARY_STORAGE = {
+      'CLOUD_NAME':'drihinial',
+      'API_KEY':'549549627323677',
+      'API_SECRET':'SCrJ4ubHIzhiQiLWHaweTNMCfu8',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+

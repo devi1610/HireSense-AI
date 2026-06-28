@@ -8,3 +8,6 @@ PyJWT==2.13.0
 PyPDF2==3.0.1
 sqlparse==0.5.5
 gunicorn
+cloudinary==1.44.0
+django-cloudinary-storage==0.3.0
+

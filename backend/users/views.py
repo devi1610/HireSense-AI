@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from .models import UserProfile, Resume
 from .serializers import UserSerializer
 import PyPDF2
+import urllib.request
+import io
 
 
 # ---------------- REGISTER ----------------
@@ -96,7 +98,7 @@ def delete_resume(request, id):
         return Response({"error": "Resume not found"}, status=404)
 
 
-# ---------------- AI ANALYSIS (FINAL FIXED) ----------------
+# ---------------- AI ANALYSIS ----------------
 @api_view(['GET'])
 def analyze_resume(request, id):
     try:
@@ -104,15 +106,19 @@ def analyze_resume(request, id):
 
         # ---------------- TEXT EXTRACTION ----------------
         text = ""
-        with open(resume.file.path, "rb") as file:
-            reader = PyPDF2.PdfReader(file)
-            for page in reader.pages:
-                if page.extract_text():
-                    text += page.extract_text()
+        file_url = resume.file.url
+
+        with urllib.request.urlopen(file_url) as response:
+            file_bytes = io.BytesIO(response.read())
+
+        reader = PyPDF2.PdfReader(file_bytes)
+        for page in reader.pages:
+            if page.extract_text():
+                text += page.extract_text()
 
         text = text.lower()
 
-        # ---------------- CONTROLLED SKILL DB ----------------
+        # ---------------- SKILL DB ----------------
         skills_db = [
             "python", "django", "flask",
             "react", "javascript", "html", "css",
@@ -131,7 +137,7 @@ def analyze_resume(request, id):
             if skill in text:
                 user_skills.add(skill)
 
-        # ---------------- ROLE SYSTEM ----------------
+        # ---------------- ROLE MATCHING ----------------
         role_requirements = {
             "Backend Developer": {"python", "django", "sql"},
             "Frontend Developer": {"react", "javascript", "html", "css"},
@@ -140,7 +146,6 @@ def analyze_resume(request, id):
             "Full Stack Developer": {"python", "django", "react", "javascript"}
         }
 
-        # ---------------- ROLE MATCHING ----------------
         job_suggestions = []
 
         for role, req_skills in role_requirements.items():
@@ -179,7 +184,7 @@ def analyze_resume(request, id):
         ai_suggestions = []
 
         if missing_skills:
-           ai_suggestions.append(
+            ai_suggestions.append(
                 "Add missing skills: " + ", ".join(missing_skills)
             )
 
@@ -192,7 +197,6 @@ def analyze_resume(request, id):
 
         if "git" not in user_skills and "github" not in user_skills:
             ai_suggestions.append("Add Git/GitHub experience (important for recruiters)")
-
 
         # ---------------- RESPONSE ----------------
         return Response({
