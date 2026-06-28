@@ -108,6 +108,10 @@ def analyze_resume(request, id):
         text = ""
         file_url = resume.file.url
 
+        # Fix: local URL అయితే full URL చేయి
+        if file_url.startswith('/'):
+            file_url = 'https://hiresense-ai-75v4.onrender.com' + file_url
+
         response = req.get(file_url, timeout=30)
         file_bytes = io.BytesIO(response.content)
 
