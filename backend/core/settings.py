@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'cloudinary',
-    'clodinary_storage',  
+    'cloudinary_storage',  
     'users',
 ]
 
