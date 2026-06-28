@@ -39,8 +39,8 @@ function UploadResume() {
       navigate("/dashboard");
 
     } catch (err) {
-      console.log(err.response?.data);
-      alert("Upload failed");
+      console.log(err);
+      alert("Upload failed: " + (err.response?.data?.error || err.message || "Unknown error"));
     } finally {
       setLoading(false);
     }
