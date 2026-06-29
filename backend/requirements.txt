@@ -10,4 +10,6 @@ sqlparse==0.5.5
 gunicorn
 cloudinary==1.44.0
 django-cloudinary-storage==0.3.0
+pdfplumber==0.11.0
+
 

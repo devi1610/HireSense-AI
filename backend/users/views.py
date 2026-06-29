@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import UserProfile, Resume
 from .serializers import UserSerializer
-import PyPDF2
+import pdfplumber
 import io
 import requests as req
 
@@ -114,11 +114,10 @@ def analyze_resume(request, id):
         response = req.get(file_url, timeout=30)
         file_bytes = io.BytesIO(response.file.read())
 
-        reader = PyPDF2.PdfReader(file_bytes)
-        for page in reader.pages:
-            if page.extract_text():
-                text += page.extract_text()
-
+        with pdfplumber.open(file_bytes) as pdf:
+             for page in pdf.pages:
+                 if page.extract_text():
+                    text += page.extract_text()
         text = text.lower()
 
         # ---------------- SKILL DB ----------------
