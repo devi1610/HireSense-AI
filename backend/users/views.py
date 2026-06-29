@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import UserProfile, Resume
 from .serializers import UserSerializer
-import pdfplumber
+import PyPDF2
 import io
 import requests as req
 
@@ -112,12 +112,13 @@ def analyze_resume(request, id):
             file_url = 'https://hiresense-ai-75v4.onrender.com' + file_url
 
         response = req.get(file_url, timeout=30)
-        file_bytes = io.BytesIO(response.file.read())
+        file_bytes = io.BytesIO(response.content)
 
-        with pdfplumber.open(file_bytes) as pdf:
-             for page in pdf.pages:
-                 if page.extract_text():
-                    text += page.extract_text()
+        reader = PyPDF2.PdfReader(file_bytes)
+        for page in reader.pages:
+            if page.extract_text():
+                text += page.extract_text()
+
         text = text.lower()
 
         # ---------------- SKILL DB ----------------
