@@ -108,7 +108,6 @@ def analyze_resume(request, id):
         text = ""
         file_url = resume.file.url
 
-        # Fix: local URL అయితే full URL చేయి
         if file_url.startswith('/'):
             file_url = 'https://hiresense-ai-75v4.onrender.com' + file_url
 
@@ -124,14 +123,51 @@ def analyze_resume(request, id):
 
         # ---------------- SKILL DB ----------------
         skills_db = [
+            # IT Skills
             "python", "django", "flask",
             "react", "javascript", "html", "css",
             "sql", "mysql", "postgresql",
             "pandas", "numpy",
-            "machine learning", "excel",
-            "java", "c++", "aws",
+            "machine learning", "deep learning",
+            "excel", "power bi", "tableau",
+            "java", "c++", "c#", "php",
+            "aws", "azure", "gcp",
             "docker", "kubernetes",
-            "git", "github"
+            "git", "github",
+            "node.js", "express", "mongodb",
+            "typescript", "graphql",
+            "linux", "devops", "ci/cd",
+
+            # Civil Skills
+            "autocad", "staad pro", "revit",
+            "structural analysis", "construction management",
+            "surveying", "primavera", "ms project",
+            "estimation", "quantity surveying",
+            "concrete", "foundation design",
+             # Mechanical Skills
+            "solidworks", "catia", "ansys",
+            "matlab", "cad", "cam",
+            "thermodynamics", "manufacturing",
+            "six sigma", "lean manufacturing",
+            "hvac", "piping", "welding",
+            "product design", "finite element analysis",
+
+            # Electrical Skills
+            "plc", "scada", "matlab simulink",
+            "circuit design", "pcb design",
+            "embedded systems", "arduino", "raspberry pi",
+            "power systems", "electrical design",
+
+            # MBA / Management Skills
+            "marketing", "finance", "accounting",
+            "supply chain", "operations management",
+            "business analysis", "project management",
+            "crm", "erp", "sap",
+            "digital marketing", "seo",
+
+            # Common Skills
+            "communication", "leadership",
+            "ms office", "presentation",
         ]
 
         # ---------------- SKILL DETECTION ----------------
@@ -143,12 +179,41 @@ def analyze_resume(request, id):
 
         # ---------------- ROLE MATCHING ----------------
         role_requirements = {
+            # IT Roles
             "Backend Developer": {"python", "django", "sql"},
             "Frontend Developer": {"react", "javascript", "html", "css"},
+            "Full Stack Developer": {"python", "django", "react", "javascript"},
             "Data Analyst": {"sql", "excel", "python", "pandas"},
             "ML Engineer": {"python", "numpy", "pandas", "machine learning"},
-            "Full Stack Developer": {"python", "django", "react", "javascript"}
+            "DevOps Engineer": {"docker", "kubernetes", "aws", "linux"},
+            "Android Developer": {"java", "python", "git"},
+            "Cloud Engineer": {"aws", "azure", "docker", "linux"},
+
+            # Civil Roles
+            "Civil Engineer": {"autocad", "structural analysis", "surveying"},
+            "Structural Engineer": {"staad pro", "structural analysis", "autocad"},
+            "Construction Manager": {"construction management", "primavera", "estimation"},
+            "Quantity Surveyor": {"quantity surveying", "estimation", "ms project"},
+
+            # Mechanical Roles
+            "Mechanical Engineer": {"solidworks", "catia", "ansys"},
+            "Design Engineer": {"solidworks", "catia", "product design"},
+            "Manufacturing Engineer": {"manufacturing", "six sigma", "lean manufacturing"},
+            "HVAC Engineer": {"hvac", "autocad", "thermodynamics"},
+
+            # Electrical Roles
+            "Electrical Engineer": {"circuit design", "plc", "power systems"},
+            "Embedded Systems Engineer": {"embedded systems", "arduino", "c++"},
+            "PCB Designer": {"pcb design", "circuit design", "autocad"},
+            
+
+            # MBA Roles
+            "Business Analyst": {"business analysis", "excel", "sql"},
+            "Marketing Manager": {"marketing", "digital marketing", "seo"},
+            "Finance Analyst": {"finance", "accounting", "excel"},
+            "Supply Chain Manager": {"supply chain", "erp", "operations management"},
         }
+
 
         job_suggestions = []
 
