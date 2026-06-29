@@ -28,9 +28,7 @@ function UploadResume() {
         "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+    
           timeout: 60000,
         }
       );
