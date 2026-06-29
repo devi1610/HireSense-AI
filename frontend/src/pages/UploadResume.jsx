@@ -24,26 +24,28 @@ function UploadResume() {
     try {
       setLoading(true);
 
-      await axios.post(
+      const response = await fetch(
         "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
-        formData,
         {
-    
-          timeout: 60000,
+          method: "POST",
+          body: formData,
         }
       );
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
 
       alert("Resume uploaded successfully 🚀");
       navigate("/dashboard");
 
     } catch (err) {
-      console.log(err);
-      alert("Upload failed: " + (err.response?.data?.error || err.message || "Unknown error"));
+      alert("Upload failed: " + err.message);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
       {/* ================= UPLOAD PAGE ================= */}
