@@ -112,7 +112,7 @@ def analyze_resume(request, id):
             file_url = 'https://hiresense-ai-75v4.onrender.com' + file_url
 
         response = req.get(file_url, timeout=30)
-        file_bytes = io.BytesIO(response.content)
+        file_bytes = io.BytesIO(response.file.read())
 
         reader = PyPDF2.PdfReader(file_bytes)
         for page in reader.pages:
