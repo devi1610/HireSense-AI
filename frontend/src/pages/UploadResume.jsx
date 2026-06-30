@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function UploadResume() {
@@ -9,43 +8,49 @@ function UploadResume() {
   const [loading, setLoading] = useState(false);
 
   const handleUpload = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!file) {
-      alert("Please select a file first");
-      return;
-    }
+  if (!file) {
+    alert("Please select a file first");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("name", "Candidate");
-    formData.append("email", "candidate@example.com");
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("name", "Candidate");
+  formData.append("email", "candidate@example.com");
+  formData.append("file", file);
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const response = await fetch(
-        "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Upload failed");
+    const response = await fetch(
+      "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
+      {
+        method: "POST",
+        body: formData,
       }
+    );
 
-      alert("Resume uploaded successfully 🚀");
-      navigate("/dashboard");
+    console.log("Status:", response.status);
 
-    } catch (err) {
-      alert("Upload failed: " + err.message);
-    } finally {
-      setLoading(false);
+    const text = await response.text();
+    console.log("Response:", text);
+
+    if (!response.ok) {
+      throw new Error(text);
     }
-  };
-  
+
+    alert("Resume uploaded successfully 🚀");
+    navigate("/dashboard");
+
+  } catch (err) {
+    console.error("Upload Error:", err);
+    alert("Upload failed: " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <>
       {/* ================= UPLOAD PAGE ================= */}
