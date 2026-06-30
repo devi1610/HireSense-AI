@@ -11,7 +11,7 @@ function UploadResume() {
   e.preventDefault();
 
   if (!file) {
-    alert("Please select a file first");
+    alert("Please select a file");
     return;
   }
 
@@ -23,29 +23,39 @@ function UploadResume() {
   try {
     setLoading(true);
 
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 20000); // 20 sec timeout
+
     const response = await fetch(
       "https://hiresense-ai-75v4.onrender.com/api/users/upload/",
       {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       }
     );
 
-    console.log("Status:", response.status);
-
-    const text = await response.text();
-    console.log("Response:", text);
+    clearTimeout(timeout);
 
     if (!response.ok) {
-      throw new Error(text);
+      throw new Error("Server error");
     }
 
-    alert("Resume uploaded successfully 🚀");
+    alert("Upload success 🚀");
     navigate("/dashboard");
 
   } catch (err) {
-    console.error("Upload Error:", err);
-    alert("Upload failed: " + err.message);
+    console.log("UPLOAD ERROR:", err);
+
+    if (err.name === "AbortError") {
+      alert("Upload took too long (network issue)");
+    } else {
+      alert("Upload failed. Try again.");
+    }
+
   } finally {
     setLoading(false);
   }

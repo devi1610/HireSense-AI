@@ -49,8 +49,8 @@ def login_user(request):
 @api_view(['POST'])
 def upload_resume(request):
     try:
-        print("REQUEST DATA:", request.data)
-        print("REQUEST FILES:", request.FILES)
+        print("FILES:", request.FILES)
+        print("DATA:", request.data)
 
         name = request.data.get('name')
         email = request.data.get('email')
@@ -65,20 +65,14 @@ def upload_resume(request):
             file=file
         )
 
-        resume.save()
-
-        print("SAVED ID:", resume.id)
-
         return Response({
-            "message": "Resume uploaded successfully 🚀",
+            "message": "Uploaded successfully",
             "id": resume.id
         })
 
     except Exception as e:
         print("UPLOAD ERROR:", str(e))
         return Response({"error": str(e)}, status=500)
-
-
 # ---------------- GET RESUMES ----------------
 @api_view(['GET'])
 def get_resumes(request):
